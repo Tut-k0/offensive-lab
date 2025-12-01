@@ -1,0 +1,73 @@
+# ISOs and large binary files
+*.iso
+*.iso.gz
+*.vmdk
+*.vdi
+*.vhd
+*.vhdx
+
+# Packer cache and builds
+packer_cache/
+output-*/
+builds/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+
+# Vagrant
+.vagrant/
+*.box
+
+# Credentials and sensitive data
+*credentials*.txt
+*password*.txt
+secrets/
+*.key
+*.pem
+*.pfx
+*.p12
+
+# OS specific
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# VMware specific
+*.vmx.lck
+*.vmsd
+*.nvram
+*.vmx~
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# Ansible
+*.retry
