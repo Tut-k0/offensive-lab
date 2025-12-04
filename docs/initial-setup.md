@@ -196,6 +196,39 @@ Boot up the VM and go with all default things in the GUI for now for initial ins
 	4. BRIDGE1 select `OPT1` as the member interface and in advanced options select `SPAN` or `OPT2` if you did not rename, as the value for `Span Port`. Save the settings.
 	5. With these saved we have fully set up everything we should need and can move on to provisioning the other hosts.
 
+### Adding Firewall Rules to OPT1/DMZ
+Even though we set up the second network the exact same as LAN, pfsense blocks all traffic on new interfaces by default.
+I had not realized that until now, so I will detail how to add the firewall rules to allow traffic to flow through the DMZ subnet.
+
+The default LAN rule is allow LAN to any rule for both IPv4 and IPv6. To mirror that for default setup, we can add the firewall rules as follows:
+1. Go into `Firewall` -> `Rules` -> `OPT1` and create a new rule.
+2. Set the following options:
+	1. Select `Pass` as the action.
+	2. Select `OPT1` as the interface.
+	3. Select `IPv4` for the address family.
+	4. Select `Any` for the protocol.
+	5. Select `OPT1 subnets` for the source.
+	6. Select `Any` for the destination.
+	7. Set the description to `Default allow OPT1 to any rule`.
+3. Do the same thing again for IPv6, but select `IPv6` for the address family.
+4. Save the rules and apply the changes.
+
+>**NOTE**: This setup allows traffic to flow from the DMZ subnet to the LAN subnet and vice versa. If you want to treat the DMZ more like a separate subnet, this can work just as it is.
+
+To actually make this more of an actual DMZ, we can add the following rule as well to block traffic from the DMZ subnet to the LAN subnet:
+1. Go into `Firewall` -> `Rules` -> `OPT1` and create a new rule.
+2. Set the following options:
+    1. Select `Block` as the action.
+    2. Select `OPT1` as the interface.
+    3. Select `IPv4+IPv6` for the address family.
+    4. Select `Any` for the protocol.
+    5. Select `OPT1 subnets` for the source.
+    6. Select `LAN subnets` for the destination.
+    7. Set the description to `Block OPT1 from accessing LAN (IPv4 and IPv6)`.
+3. Reorder this block rule so that it is before the default allowed rules.
+4. Save the rules and apply the changes.
+
+With the default allowed and blocked rules in place, the DMZ should be fully functional. LAN can access DMZ, but not vice versa.
 
 ## Security Onion Setup
 Following loosely off of: https://docs.securityonion.net/en/2.4/vmware.html#workstation-pro and https://docs.securityonion.net/en/2.4/hardware.html#hardware
