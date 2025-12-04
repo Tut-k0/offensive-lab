@@ -230,6 +230,27 @@ To actually make this more of an actual DMZ, we can add the following rule as we
 
 With the default allowed and blocked rules in place, the DMZ should be fully functional. LAN can access DMZ, but not vice versa.
 
+#### Elastic Agent Firewall Rules
+We need to make some PASS rules to allow DMZ hosts that we plop the Elastic Agent on to communicate with Security Onion.
+These are going to be direct IP rules, unless we configure Security Onion to use hostnames, in which case we need to have DNS to LAN potentially required as well.
+The port for Elastic Agent Enrollment on Security Onion is `8220` and the logstash port is `5055`.
+
+To add the rule to allow enrollment/agent traffic to Security Onion over `8220`, go into `Firewall` -> `Rules` -> `OPT1` and create a new rule.
+Set the following options:
+1. Select `Pass` as the action.
+2. Select `OPT1` as the interface.
+3. Select `IPv4` for the address family.
+4. Select `TCP` for the protocol.
+5. Enter `OPT1 subnets` as the source address.
+6. Select `Address or Alias` for Destination and enter the Security Onion IP address `10.13.37.5`.
+7. For the destination port range, select `8220` for the **From** field, and `8220` for the **To** field.
+8. Set the description to `Allow OPT1 hosts elastic agent communication to Security Onion`.
+9. Click Save.
+10. Reorder this new rule so that it is before all other rules (at the top). 
+11. Save the rules and apply the changes.
+
+Repeat the same steps for the logstash port `5055`. So two rules are added and put to the top, and that should allow elastic agents to work correctly in the DMZ subnet.
+
 ## Security Onion Setup
 Following loosely off of: https://docs.securityonion.net/en/2.4/vmware.html#workstation-pro and https://docs.securityonion.net/en/2.4/hardware.html#hardware
 
@@ -276,6 +297,34 @@ This can be optional, but as a best practice, we should reserve the IP address t
 5. Click **Save**
 
 You will need to reboot Security Onion at this point most likely.
+
+### Elastic Agent Setup
+Most of this is already preconfigured for us already. We just need to edit the firewall config for elastic agent checkin to allow our subnets.
+In Security Onion web interface, go to `Administration` -> `Configuration` -> `firewall` -> `hostgroups` -> `elastic_agent_endpoint` and add your CIDR subnets to the field.
+Do the same thing for `fleet` in the `hostgroups` section, as the elastic agent needs enrollment port and logstash port.
+
+My setup I used both `10.13.37.0/24` and `10.13.38.0/24` in the grid values.
+
+For grabbing the agent installations, you can head to the elastic fleet page and select the `Add agent` button. You can use the default the `endpoints-initial` policy.
+
+Typical steps for Linux and Windows look like the following:
+```bash
+# For Linux
+curl -L -O http://10.13.37.5:8443/artifacts/beats/elastic-agent/elastic-agent-8.18.8-linux-x86_64.tar.gz 
+tar xzvf elastic-agent-8.18.8-linux-x86_64.tar.gz
+cd elastic-agent-8.18.8-linux-x86_64
+sudo ./elastic-agent install --url=https://10.13.37.5:8220 --enrollment-token=<TOKEN>
+```
+```powershell
+# For Windows (powershell)
+$ProgressPreference = 'SilentlyContinue'
+Invoke-WebRequest -Uri http://10.13.37.5:8443/artifacts/beats/elastic-agent/elastic-agent-8.18.8-windows-x86_64.zip -OutFile elastic-agent-8.18.8-windows-x86_64.zip 
+Expand-Archive .\elastic-agent-8.18.8-windows-x86_64.zip -DestinationPath .
+cd elastic-agent-8.18.8-windows-x86_64
+.\elastic-agent.exe install --url=https://10.13.37.5:8220 --enrollment-token=<TOKEN>
+```
+
+>Quick note that the `--insecure` flag is required if you still have a self-signed certificate on the Security Onion server.
 
 
 ### Other Useful Info
