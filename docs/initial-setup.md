@@ -137,6 +137,10 @@ Then log out and log back in to update your group membership.
 ## pfSense Setup
 Before spinning up pfSense, give it 1 GB of RAM, and 1 CPU is fine. Give it 4 network adapters in this order `NAT` which will be for WAN, the corporate internal host-only network (`10.13.37.0/24`), the DMZ host-only network (`10.13.38.0/24`), and finally the SPAN host-only network (`10.4.20.0/24`).
 
+Should look something like this:
+
+![pfsense adapters](images/pfsense-adapters.png)
+
 Another thing to do before booting up is enable interface promiscuous mode for both the corporate internal host-only, and the DMZ interfaces. By default, VMWare does not allow this, and when you try to set up SPAN for traffic mirroring, you will get an error if you don't do this:
 ```
 The virtual machine's operating system has attempted to enable promiscuous mode on adapter 'Ethernet1'. This is not allowed for security reasons.
@@ -145,8 +149,8 @@ Please go to the Web page "http://vmware.com/info?id=161" for help enabling prom
 
 There is no GUI option for this, and you need to edit your `vmx` file directly. Ensure that `ethernet1` and `ethernet2` are your corporate internal and DMZ networks. It may be different for you if you did not add your adapters in the same order.
 ```bash
-# Whatever text editor you like
-nano vmware/pfense/pfsense.vmx
+# Whatever text editor you like (also the name of the file depends on what you named your VM)
+nano vmware/pfSense/pfSense.vmx
 
 # Add these lines
 ethernet1.noPromisc = "FALSE"
