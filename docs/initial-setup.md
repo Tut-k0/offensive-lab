@@ -157,11 +157,15 @@ ethernet1.noPromisc = "FALSE"
 ethernet2.noPromisc = "FALSE"
 ```
 
+### Initial Setup
 Boot up the VM and go with all default things in the GUI for now for initial installation, once rebooted, set up the management interfaces for the DMZ and internal network. You can do this as follows:
 1. First up we will assign all the interfaces, so go ahead and select option `1) Assign Interfaces`.
-	1. It will ask if you want to set up VLANs, enter `n` as we can do that later in the web interface.
+	1. It will ask if you want to set up VLANs, enter `n` as we can do that later in the web interface if required.
 	2. Enter the interfaces in the order as you assigned, `em0` will be WAN, `em1` will be LAN (internal), Optional 1 will be `em2` the DMZ, and Optional 2 will be the SPAN `em3`. Select `y` when it looks to be assigned correctly.
 	3. Now we have all of our interfaces turned on.
+        
+    ![pfsense interfaces](images/pfsense-assign-interfaces.png)
+
 2. Next we will set up interfaces. First set up the LAN (corporate network `10.13.37.0/24`) by selecting the option `2`.
 	1. It will ask you for which interface, select LAN which will be `em1`.
 	2. Answer `n` for `Configure IPv4 address LAN interface via DHCP`.
@@ -175,8 +179,12 @@ Boot up the VM and go with all default things in the GUI for now for initial ins
 	10. Enter `10.13.37.245` for the end address of the DHCP address range. (Allows a few end addresses for static mappings)
 	11. For now, enter `y` when asked to revert to HTTP as the webConfigurator protocol.
 	12. This finalizes the process, and you should see our new address reflected for LAN when back at the main pfSense menu.
-3. Let's quickly configure the DMZ network, which is going to be the exact same steps as the LAN one, but using the `10.13.38.0/24` address and specifying OPT1 (`em2` DMZ network) to configure. I won't go step by step, but the IP for pfSense will be `10.13.38.2`, and client range is `10.13.38.3` -> `10.13.38.253` same as before basically.
-4. Now we have pfSense mostly set up, we can run through the admin GUI thing. I need to figure out how to automate all of this in the future haha.
+3. Let's quickly configure the DMZ network, which is going to be the exact same steps as the LAN one, but using the `10.13.38.0/24` address and specifying OPT1 (`em2` DMZ network) to configure. I won't go over all steps, but the IP for pfSense will be `10.13.38.2`, and the DHCP client range is `10.13.38.11` -> `10.13.38.245` same as before basically.
+4. Before continuing your setup should look something like this:
+    
+    ![pfsense interfaces](images/pfsense-interfaces.png)
+
+5. Now we have pfSense mostly set up, we can run through the admin GUI thing. I need to figure out how to automate all of this in the future haha.
 	1. You can use your host machine for this part, navigate to the pfSense web address on any of your networks (NAT, or host-only). I will use the `10.13.37.2` for this.
 	2. Login to pfSense using the default credentials `admin:pfsense`. Click next on the setup and let's get started.
 	3. On step 2 of 9 we can configure the following:
@@ -190,7 +198,7 @@ Boot up the VM and go with all default things in the GUI for now for initial ins
 	6. Step 5 has you select your LAN IP address and subnet mask which we can leave by default as we already set this up.
 	7. Step 6 has you reset the pfsense admin password. Set this to whatever you want for now.
 	8. Annnnd that is it, select reload and `pfsense` has been fully configured for most things.
-5. The last step is to now set up the SPAN bridges for mirroring traffic to Security Onion. This can be done from the Web GUI, and we can figure out how to automate this later.
+6. The last initial setup step is to create the SPAN bridges for mirroring traffic to Security Onion. This can be done from the Web GUI, and we can figure out how to automate this later.
 	1. First we need to enable our SPAN interface, go into `Interfaces` -> `OPT2` and select the following options:
 		1. Enable interface `checked`
 		2. (Optional) Change the `Description` to `SPAN`. (If you change this, the interface name goes from `OPT2` -> `SPAN`)
@@ -198,7 +206,7 @@ Boot up the VM and go with all default things in the GUI for now for initial ins
 	2. Go into `Interfaces` -> `Assignments` -> `Bridges` and create 2 bridges. 
 	3. BRIDGE0 (the first one) select `LAN` as the member interface and in advanced options select `SPAN` or `OPT2` if you did not rename, as the value for `Span Port`. Save the settings.
 	4. BRIDGE1 select `OPT1` as the member interface and in advanced options select `SPAN` or `OPT2` if you did not rename, as the value for `Span Port`. Save the settings.
-	5. With these saved we have fully set up everything we should need and can move on to provisioning the other hosts.
+	5. With these saved we have our initial setup complete. We can provision other machines at this point or add firewall rules in advance.
 
 ### Adding Firewall Rules to OPT1/DMZ
 Even though we set up the second network the exact same as LAN, pfsense blocks all traffic on new interfaces by default.
@@ -254,6 +262,9 @@ Set the following options:
 11. Save the rules and apply the changes.
 
 Repeat the same steps for the logstash port `5055`. So two rules are added and put to the top, and that should allow elastic agents to work correctly in the DMZ subnet.
+The rules should look something like this:
+
+![pfsense firewall rules](images/pfsense-firewall-rules.png)
 
 ## Security Onion Setup
 Following loosely off of: https://docs.securityonion.net/en/2.4/vmware.html#workstation-pro and https://docs.securityonion.net/en/2.4/hardware.html#hardware
@@ -265,6 +276,8 @@ We are going to be running Security Onion in `Standalone` mode, which requires s
 - 2 NICs
 	- First one should be your corporate internal NIC (`10.13.37.0/24`) in my case `vmnet2`
 	- Second one should be your span interface for capturing traffic from pfsense (`10.4.20.0/24`) in my case `vmnet4`.
+
+![Security Onion VM Specs](images/seconion-resources.png)
 
 Once that is all ready to go, spin it up and let's go through the setup. I am planning on setting this up in `Airgap` mode for right now, but we will see how that goes. (There shouldn't be any internet connectivity right now anyway)
 
@@ -303,11 +316,39 @@ This can be optional, but as a best practice, we should reserve the IP address t
 You will need to reboot Security Onion at this point most likely.
 
 ### Elastic Agent Setup
+#### Security Onion Firewall Configuration
 Most of this is already preconfigured for us already. We just need to edit the firewall config for elastic agent checkin to allow our subnets.
 In Security Onion web interface, go to `Administration` -> `Configuration` -> `firewall` -> `hostgroups` -> `elastic_agent_endpoint` and add your CIDR subnets to the field.
 Do the same thing for `fleet` in the `hostgroups` section, as the elastic agent needs enrollment port and logstash port.
 
 My setup I used both `10.13.37.0/24` and `10.13.38.0/24` in the grid values.
+
+#### Elastic Agent Installation
+Before we can install the elastic agent, we need to make sure we have the Security Onion certificates trusted on the host we are installing it on.
+This can be done by copying the Security Onion CA certificate to the host and importing it into the trusted root store. The CA file is located at `/etc/pki/ca.crt` on the Security Onion host.
+
+Linux installation:
+```bash
+# Copy to trusted certificates directory
+sudo cp ca.crt /usr/local/share/ca-certificates/securityonion-ca.crt
+
+# Update CA trust store
+sudo update-ca-certificates
+
+# Verify it was installed
+openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt /usr/local/share/ca-certificates/securityonion-ca.crt
+```
+
+Windows installation:
+```powershell
+# Import to Trusted Root Certification Authorities store
+Import-Certificate -FilePath "C:\path\to\ca.crt" -CertStoreLocation Cert:\LocalMachine\Root
+
+# Verify it was installed
+Get-ChildItem Cert:\LocalMachine\Root | Where-Object {$_.Subject -like "*securityonion*"}
+```
+
+>In the future, we will extract this to auto provision for client hosts.
 
 For grabbing the agent installations, you can head to the elastic fleet page and select the `Add agent` button. You can use the default the `endpoints-initial` policy.
 
@@ -328,7 +369,7 @@ cd elastic-agent-8.18.8-windows-x86_64
 .\elastic-agent.exe install --url=https://10.13.37.5:8220 --enrollment-token=<TOKEN>
 ```
 
->Quick note that the `--insecure` flag is required if you still have a self-signed certificate on the Security Onion server.
+>Quick note that the `--insecure` flag is required if you still have a self-signed certificate in use and did not import the CA certificate into the trusted root store. **NOTE**: This will not run correctly out of the box, as logstash expects the clients/agents to use mTLS. The easier path is to install the CA.
 
 
 ### Other Useful Info
