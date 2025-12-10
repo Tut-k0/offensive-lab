@@ -1,0 +1,24 @@
+{
+  "Hostname": "DC01",
+  "Network": {
+    "InterfaceAlias": "Ethernet0",
+    "IPAddress": "10.13.37.3",
+    "PrefixLength": 24,
+    "DefaultGateway": "10.13.37.2",
+    "DNSServers": [
+      "127.0.0.1",
+      "10.13.37.2",
+      "8.8.8.8"
+    ]
+  },
+  "TimeZone": "Central Standard Time",
+  "DisableIPv6": true,
+  "EnableRDP": false,
+  "WindowsFeatures": [
+    "AD-Domain-Services",
+    "DNS",
+    "RSAT-AD-Tools",
+    "RSAT-DNS-Server",
+    "GPMC"
+  ]
+}

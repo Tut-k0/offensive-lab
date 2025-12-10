@@ -379,3 +379,64 @@ sudo so-status
 ```
 
 A lot more info: https://docs.securityonion.net/en/2.4/help.html
+
+
+## Windows Server 2025 Setup (Domain Controller)
+### VM Specs
+Running this as Server Core, so it can be kept pretty light:
+- CPU: 2
+- RAM: 4GB
+- Disk: 60GB
+- NIC: Internal Network (10.13.37.0/24 | vmnet2 in my case)
+
+![Windows Server 2025 VM Specs](images/win-server-specs.png)
+
+### Installation Process
+1. Create VM in VMware Workstation
+   - Select "Typical" configuration
+   - Select "I will install the operating system later."
+   - Choose Microsoft Windows Server 2025 Standard as the operating system.
+   - Create a name for the VM.
+   - Configure hardware as specified above.
+
+2. Windows Installation
+   - Boot from ISO
+   - Select language and keyboard
+   - Click "Install now"
+   - Choose "Windows Server 2025 Standard" (Server Core recommended)
+   - Accept license terms
+   - Select "Custom: Install Windows only (advanced)"
+   - Select the disk and click "Create" and then "Next"
+   - Wait for installation to complete
+
+3. **Initial Server Configuration**
+   - Set Administrator password when prompted
+   - Log in as Administrator
+   - Server Core drops you to SConfig, which is the server configuration tool.
+   - Regular PowerShell can be used to run scripts, select option `15` to drop into PowerShell.
+   - Optionally run `Set-SConfig -AutoLaunch $false` to disable the SConfig on startup.
+
+### Host Configuration
+Transfer the domain controller specific scripts from the `/scripts/windows` folder to the VM and run them.
+Optionally grab the DC configuration files from the `/configs/windows` folder tas well to customize the options for setup.
+
+Run the initialization script:
+```powershell
+# With custom config file
+.\Initialize-DCHost.ps1 -ConfigFile .\dc-config.json
+
+# Or with defaults
+.\Initialize-DCHost.ps1
+```
+
+This script performs the following actions (which most are configurable):
+- Sets hostname
+- Configures static IP address
+- Sets DNS servers (127.0.0.1 as primary)
+- Disables IPv6 (optional)
+- Enables Remote Desktop (optional, disabled by default since we are using Server Core)
+- Installs AD-Domain-Services role
+- Installs DNS, RSAT tools, GPMC
+- Allows ICMP through Windows firewall (for network testing purposes)
+
+After the script completes, reboot the VM and log back in.
