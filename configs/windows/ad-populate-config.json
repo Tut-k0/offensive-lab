@@ -1,0 +1,311 @@
+{
+  "DomainDN": "DC=redteam,DC=lab",
+  "OrganizationalUnits": [
+    {
+      "Name": "Corporate",
+      "Path": ""
+    },
+    {
+      "Name": "Workstations",
+      "Path": "OU=Corporate"
+    },
+    {
+      "Name": "Servers",
+      "Path": "OU=Corporate"
+    },
+    {
+      "Name": "Users",
+      "Path": "OU=Corporate"
+    },
+    {
+      "Name": "Groups",
+      "Path": "OU=Corporate"
+    },
+    {
+      "Name": "Service Accounts",
+      "Path": "OU=Corporate"
+    },
+    {
+      "Name": "IT",
+      "Path": "OU=Users,OU=Corporate"
+    },
+    {
+      "Name": "HR",
+      "Path": "OU=Users,OU=Corporate"
+    },
+    {
+      "Name": "Finance",
+      "Path": "OU=Users,OU=Corporate"
+    },
+    {
+      "Name": "Sales",
+      "Path": "OU=Users,OU=Corporate"
+    }
+  ],
+  "Groups": [
+    {
+      "Name": "IT Admins",
+      "Scope": "Global",
+      "Category": "Security",
+      "Description": "IT Department Administrators",
+      "Path": "OU=Groups,OU=Corporate"
+    },
+    {
+      "Name": "Help Desk",
+      "Scope": "Global",
+      "Category": "Security",
+      "Description": "Help Desk Team",
+      "Path": "OU=Groups,OU=Corporate"
+    },
+    {
+      "Name": "HR Staff",
+      "Scope": "Global",
+      "Category": "Security",
+      "Description": "Human Resources",
+      "Path": "OU=Groups,OU=Corporate"
+    },
+    {
+      "Name": "Finance Team",
+      "Scope": "Global",
+      "Category": "Security",
+      "Description": "Finance Department",
+      "Path": "OU=Groups,OU=Corporate"
+    },
+    {
+      "Name": "Sales Team",
+      "Scope": "Global",
+      "Category": "Security",
+      "Description": "Sales Department",
+      "Path": "OU=Groups,OU=Corporate"
+    },
+    {
+      "Name": "Remote Access",
+      "Scope": "Global",
+      "Category": "Security",
+      "Description": "VPN/Remote Access Users",
+      "Path": "OU=Groups,OU=Corporate"
+    },
+    {
+      "Name": "File Share RW",
+      "Scope": "Global",
+      "Category": "Security",
+      "Description": "File Share Read/Write",
+      "Path": "OU=Groups,OU=Corporate"
+    },
+    {
+      "Name": "File Share RO",
+      "Scope": "Global",
+      "Category": "Security",
+      "Description": "File Share Read Only",
+      "Path": "OU=Groups,OU=Corporate"
+    }
+  ],
+  "Users": [
+    {
+      "Username": "jsmith",
+      "FirstName": "John",
+      "LastName": "Smith",
+      "Department": "IT",
+      "Title": "IT Manager",
+      "OU": "OU=IT,OU=Users,OU=Corporate",
+      "Groups": [
+        "IT Admins",
+        "Remote Access",
+        "File Share RW"
+      ],
+      "Description": "IT Department Manager",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "bwilliams",
+      "FirstName": "Bob",
+      "LastName": "Williams",
+      "Department": "IT",
+      "Title": "Systems Administrator",
+      "OU": "OU=IT,OU=Users,OU=Corporate",
+      "Groups": [
+        "IT Admins",
+        "Remote Access",
+        "File Share RW"
+      ],
+      "Description": "Systems Administrator",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "agarcia",
+      "FirstName": "Alice",
+      "LastName": "Garcia",
+      "Department": "IT",
+      "Title": "Help Desk Technician",
+      "OU": "OU=IT,OU=Users,OU=Corporate",
+      "Groups": [
+        "Help Desk",
+        "File Share RW"
+      ],
+      "Description": "Help Desk Support",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "mjohnson",
+      "FirstName": "Mary",
+      "LastName": "Johnson",
+      "Department": "HR",
+      "Title": "HR Director",
+      "OU": "OU=HR,OU=Users,OU=Corporate",
+      "Groups": [
+        "HR Staff",
+        "Remote Access",
+        "File Share RW"
+      ],
+      "Description": "Human Resources Director",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "tmartinez",
+      "FirstName": "Tom",
+      "LastName": "Martinez",
+      "Department": "HR",
+      "Title": "HR Specialist",
+      "OU": "OU=HR,OU=Users,OU=Corporate",
+      "Groups": [
+        "HR Staff",
+        "File Share RO"
+      ],
+      "Description": "HR Specialist",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "sdavis",
+      "FirstName": "Sarah",
+      "LastName": "Davis",
+      "Department": "Finance",
+      "Title": "CFO",
+      "OU": "OU=Finance,OU=Users,OU=Corporate",
+      "Groups": [
+        "Finance Team",
+        "Remote Access",
+        "File Share RW"
+      ],
+      "Description": "Chief Financial Officer",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "rlopez",
+      "FirstName": "Robert",
+      "LastName": "Lopez",
+      "Department": "Finance",
+      "Title": "Accountant",
+      "OU": "OU=Finance,OU=Users,OU=Corporate",
+      "Groups": [
+        "Finance Team",
+        "File Share RW"
+      ],
+      "Description": "Senior Accountant",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "klee",
+      "FirstName": "Kevin",
+      "LastName": "Lee",
+      "Department": "Sales",
+      "Title": "Sales Manager",
+      "OU": "OU=Sales,OU=Users,OU=Corporate",
+      "Groups": [
+        "Sales Team",
+        "Remote Access",
+        "File Share RW"
+      ],
+      "Description": "Sales Department Manager",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "jwhite",
+      "FirstName": "Jennifer",
+      "LastName": "White",
+      "Department": "Sales",
+      "Title": "Account Executive",
+      "OU": "OU=Sales,OU=Users,OU=Corporate",
+      "Groups": [
+        "Sales Team",
+        "Remote Access",
+        "File Share RO"
+      ],
+      "Description": "Senior Account Executive",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "dharris",
+      "FirstName": "David",
+      "LastName": "Harris",
+      "Department": "Sales",
+      "Title": "Sales Representative",
+      "OU": "OU=Sales,OU=Users,OU=Corporate",
+      "Groups": [
+        "Sales Team",
+        "File Share RO"
+      ],
+      "Description": "Sales Representative",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    }
+  ],
+  "ServiceAccounts": [
+    {
+      "Username": "svc_backup",
+      "Description": "Backup Service Account",
+      "OU": "OU=Service Accounts,OU=Corporate",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "svc_sql",
+      "Description": "SQL Server Service Account",
+      "OU": "OU=Service Accounts,OU=Corporate",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    },
+    {
+      "Username": "svc_web",
+      "Description": "Web Application Service Account",
+      "OU": "OU=Service Accounts,OU=Corporate",
+      "WeakPassword": false,
+      "PasswordNeverExpires": true
+    }
+  ],
+  "Computers": [
+    {
+      "Name": "WS01",
+      "OU": "OU=Workstations,OU=Corporate",
+      "Description": "Windows 11 Workstation"
+    },
+    {
+      "Name": "WS02",
+      "OU": "OU=Workstations,OU=Corporate",
+      "Description": "Windows 11 Workstation"
+    },
+    {
+      "Name": "WEB01",
+      "OU": "OU=Servers,OU=Corporate",
+      "Description": "Web Server (DMZ)"
+    },
+    {
+      "Name": "FILE01",
+      "OU": "OU=Servers,OU=Corporate",
+      "Description": "File Server"
+    },
+    {
+      "Name": "SQL01",
+      "OU": "OU=Servers,OU=Corporate",
+      "Description": "SQL Server"
+    }
+  ]
+}
