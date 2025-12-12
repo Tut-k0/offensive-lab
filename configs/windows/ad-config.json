@@ -1,0 +1,16 @@
+{
+  "DomainName": "redteam.lab",
+  "DomainNetBIOSName": "REDTEAM",
+  "ForestMode": "WinThreshold",
+  "DomainMode": "WinThreshold",
+  "SafeModePassword": null,
+  "InstallDNS": true,
+  "CreateDNSForwarder": true,
+  "DNSForwarders": [
+    "8.8.8.8",
+    "1.1.1.1"
+  ],
+  "DatabasePath": "C:\\Windows\\NTDS",
+  "LogPath": "C:\\Windows\\NTDS",
+  "SysvolPath": "C:\\Windows\\SYSVOL"
+}

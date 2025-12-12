@@ -46,7 +46,7 @@ $DefaultConfig = @{
 # Load config from file if provided, otherwise use defaults
 if ($ConfigFile -and (Test-Path $ConfigFile)) {
     Write-Host "[*] Loading configuration from: $ConfigFile" -ForegroundColor Cyan
-    $Config = Get-Content $ConfigFile | ConvertFrom-Json -AsHashtable
+    $Config = Get-Content $ConfigFile | ConvertFrom-Json
 } else {
     Write-Host "[*] Using default configuration" -ForegroundColor Yellow
     $Config = $DefaultConfig
