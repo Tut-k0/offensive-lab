@@ -21,6 +21,21 @@ param(
     [string]$ConfigFile
 )
 
+# Default configuration
+$DefaultConfig = @{
+    DomainName = "redteam.lab"
+    DomainNetBIOSName = "REDTEAM"
+    ForestMode = "WinThreshold"  # Windows Server 2016+ functional level
+    DomainMode = "WinThreshold"
+    SafeModePassword = $null  # DSRM password, auto-generated if null
+    InstallDNS = $true
+    CreateDNSForwarder = $true
+    DNSForwarders = @("8.8.8.8", "1.1.1.1")
+    DatabasePath = "C:\Windows\NTDS"
+    LogPath = "C:\Windows\NTDS"
+    SysvolPath = "C:\Windows\SYSVOL"
+}
+
 # Load config from file if provided
 if ($ConfigFile -and (Test-Path $ConfigFile)) {
     Write-Host "[*] Loading configuration from: $ConfigFile" -ForegroundColor Cyan
