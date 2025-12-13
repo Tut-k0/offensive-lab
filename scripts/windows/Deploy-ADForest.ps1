@@ -225,6 +225,6 @@ Write-Host "After reboot, log in as: $($Config.DomainNetBIOSName)\Administrator"
 Write-Host "Then run: .\Populate-ADEnvironment.ps1" -ForegroundColor Cyan
 Write-Host ""
 
-Write-Status "Rebooting in 20 seconds..." "WARNING"
-Start-Sleep -Seconds 20
+Write-Status "Rebooting in 15 seconds..." "WARNING"
+Start-Sleep -Seconds 15
 Restart-Computer -Force

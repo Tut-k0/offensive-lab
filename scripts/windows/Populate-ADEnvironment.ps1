@@ -604,7 +604,7 @@ if ($createdUsers.Count -gt 0 -or $createdServiceAccounts.Count -gt 0) {
             Write-Host "  UPN:         " -NoNewline -ForegroundColor Gray
             Write-Host "$($s.UPN)" -ForegroundColor White
             Write-Host "  Password:    " -NoNewline -ForegroundColor Gray
-            if ($u.PasswordType -eq "weak") {
+            if ($s.PasswordType -eq "weak") {
                 Write-Host "$($s.Password) $passwordDisplay" -ForegroundColor Red
             } else {
                 Write-Host "$($s.Password) $passwordDisplay" -ForegroundColor Green

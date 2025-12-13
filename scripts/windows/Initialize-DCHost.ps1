@@ -192,13 +192,10 @@ if ($requiresReboot) {
     Write-Host "`n[!] REBOOT REQUIRED" -ForegroundColor Yellow
     Write-Host "Run this command after reboot:" -ForegroundColor Yellow
     Write-Host "  .\Deploy-ADForest.ps1" -ForegroundColor White
+    Write-Status "Rebooting in 10 seconds..." "WARNING"
+    Start-Sleep -Seconds 10
+    Restart-Computer -Force
 
-    $reboot = Read-Host "`nReboot now? (Y/N)"
-    if ($reboot -eq "Y" -or $reboot -eq "y") {
-        Write-Status "Rebooting in 10 seconds..." "WARNING"
-        Start-Sleep -Seconds 10
-        Restart-Computer -Force
-    }
 } else {
     Write-Host "`nNext step: .\Deploy-ADForest.ps1" -ForegroundColor Cyan
 }
