@@ -510,4 +510,7 @@ This script performs the following actions (which most are configurable):
   - SmartcardLogon, CodeSigning
 - Creates CertEnroll virtual directory in IIS (if IIS is installed)
 
-**No reboot is required after AD CS deployment.**
+After the script completes, it will reboot the machine.
+
+### AD Group Policy Deployment
+TODO 

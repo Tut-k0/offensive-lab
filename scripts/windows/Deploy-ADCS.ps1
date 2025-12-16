@@ -570,3 +570,7 @@ if (-not $Config.InstallIIS) {
 Write-Host ""
 Write-Host "AD CS deployment completed successfully!" -ForegroundColor Green
 Write-Host ""
+
+Write-Status "Rebooting in 10 seconds..." "WARNING"
+Start-Sleep -Seconds 10
+Restart-Computer -Force
