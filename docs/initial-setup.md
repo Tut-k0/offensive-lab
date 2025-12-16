@@ -480,4 +480,34 @@ This script creates the following:
 - Computer Objects (WS01, WS02, WEB01, FILE01, SQL01)
 
 
-[//]: # (TODO: Need to test what we have and see how things are working in current state.)
+### (Optional) Deploy Certificate Authority (AD CS)
+If you want to deploy AD CS as well in your AD environment, run this next:
+```powershell
+.\Deploy-ADCS.ps1 -ConfigFile .\adcs-config.json
+
+# Or with defaults
+.\Deploy-ADCS.ps1
+```
+
+This script performs the following actions (which most are configurable):
+- Validates prerequisites (domain membership, AD DS status)
+- Installs ADCS-Cert-Authority role if not already installed
+- Configures Enterprise Root CA with:
+  - CA Common Name: <NETBIOSNAME>-CA (or custom)
+  - Validity Period: 10 years (or custom)
+  - Key Length: 4096 bits RSA (or custom)
+  - Hash Algorithm: SHA256 (or custom)
+- Configures CRL Distribution Points (CDP)
+- Configures Authority Information Access (AIA)
+- Sets CRL publication intervals:
+  - Base CRL: Every 1 day (or custom)
+  - Delta CRL: Every 1 hour (or custom)
+- Configures CA auditing (default: All events)
+- Publishes initial Certificate Revocation List
+- Configures default certificate templates:
+  - User, Computer, WebServer
+  - DomainController, KerberosAuthentication
+  - SmartcardLogon, CodeSigning
+- Creates CertEnroll virtual directory in IIS (if IIS is installed)
+
+**No reboot is required after AD CS deployment.**
