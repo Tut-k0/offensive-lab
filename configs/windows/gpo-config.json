@@ -1,0 +1,89 @@
+{
+  "SecurityPosture": "vulnerable",
+  "Policies": {
+    "WindowsDefender": {
+      "Enabled": false,
+      "RealTimeProtection": false,
+      "SampleSubmission": false
+    },
+    "SMBSigning": {
+      "ClientRequired": false,
+      "ClientEnabled": false,
+      "ServerRequired": false,
+      "ServerEnabled": false
+    },
+    "LLMNR": {
+      "Enabled": true
+    },
+    "NBTNS": {
+      "Enabled": true
+    },
+    "WPAD": {
+      "Enabled": true
+    },
+    "Firewall": {
+      "DomainProfile": "Off",
+      "PrivateProfile": "Off",
+      "PublicProfile": "Off"
+    },
+    "RestrictedAdmin": {
+      "Enabled": false
+    },
+    "LSAProtection": {
+      "Enabled": false
+    },
+    "WDigest": {
+      "Enabled": true
+    },
+    "PowerShellLogging": {
+      "ModuleLogging": false,
+      "ScriptBlockLogging": false,
+      "Transcription": false
+    },
+    "UAC": {
+      "EnableLUA": false,
+      "ConsentPromptBehaviorAdmin": 0
+    }
+  },
+  "PresetProfiles": {
+    "secure": {
+      "Description": "Hardened security baseline",
+      "Overrides": {
+        "WindowsDefender.Enabled": true,
+        "WindowsDefender.RealTimeProtection": true,
+        "SMBSigning.ClientRequired": true,
+        "SMBSigning.ClientEnabled": true,
+        "SMBSigning.ServerRequired": true,
+        "SMBSigning.ServerEnabled": true,
+        "LLMNR.Enabled": false,
+        "NBTNS.Enabled": false,
+        "WPAD.Enabled": false,
+        "Firewall.DomainProfile": "On",
+        "Firewall.PrivateProfile": "On",
+        "Firewall.PublicProfile": "On",
+        "RestrictedAdmin.Enabled": true,
+        "LSAProtection.Enabled": true,
+        "WDigest.Enabled": false,
+        "PowerShellLogging.ModuleLogging": true,
+        "PowerShellLogging.ScriptBlockLogging": true,
+        "PowerShellLogging.Transcription": true,
+        "UAC.EnableLUA": true,
+        "UAC.ConsentPromptBehaviorAdmin": 2
+      }
+    },
+    "vulnerable": {
+      "Description": "Intentionally misconfigured for red team testing",
+      "Overrides": {}
+    },
+    "mixed": {
+      "Description": "Partial hardening with exploitable gaps",
+      "Overrides": {
+        "WindowsDefender.Enabled": true,
+        "WindowsDefender.RealTimeProtection": false,
+        "LLMNR.Enabled": true,
+        "NBTNS.Enabled": false,
+        "PowerShellLogging.ScriptBlockLogging": true
+      }
+    }
+  }
+}

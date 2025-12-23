@@ -493,7 +493,7 @@ This script performs the following actions (which most are configurable):
 - Validates prerequisites (domain membership, AD DS status)
 - Installs ADCS-Cert-Authority role if not already installed
 - Configures Enterprise Root CA with:
-  - CA Common Name: <NETBIOSNAME>-CA (or custom)
+  - CA Common Name: REDTEAM-CA (default value taken as NETBIOS name of the domain, or custom)
   - Validity Period: 10 years (or custom)
   - Key Length: 4096 bits RSA (or custom)
   - Hash Algorithm: SHA256 (or custom)
@@ -512,5 +512,34 @@ This script performs the following actions (which most are configurable):
 
 After the script completes, it will reboot the machine.
 
-### AD Group Policy Deployment
-TODO 
+### (Optional) AD Group Policy Deployment
+This section is for deploying security policies across the domain with support for hardened ("secure"), intentionally vulnerable, or mixed security postures.
+You could also opt to just leave everything by default and not run this script.
+
+Key Settings:
+- Windows Defender control
+- SMB Signing configuration
+- LLMNR/NetBIOS/WPAD control
+- Windows Firewall profile management
+- Credential Protection (Restricted Admin, LSA, WDigest)
+- PowerShell Logging
+- UAC settings
+
+You can edit the `gpo-config.json` file to customize the security posture profiles to your liking.
+Run the script in the following ways to deploy the policies:
+```powershell
+# Default vulnerable
+.\Deploy-GPOPolicies.ps1 -ConfigFile ".\gpo-config.json" -GPOProfile vulnerable
+
+# Secure Posture
+.\Deploy-GPOPolicies.ps1 -ConfigFile ".\gpo-config.json" -GPOProfile secure
+
+# Mixed Posture (personalize away)
+.\Deploy-GPOPolicies.ps1 -ConfigFile ".\gpo-config.json" -GPOProfile mixed
+
+# Force recreation of GPOs
+.\Deploy-GPOPolicies.ps1 -ConfigFile ".\gpo-config.json" -Force
+
+# Technically you can just run the script without any parameters, this results in vulnerable policy.
+.\Deploy-GPOPolicies.ps1
+```
